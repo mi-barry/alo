@@ -43,6 +43,20 @@ def string_to_date(date_string):
     return datetime.strptime(date_string, '%Y-%m-%d').date()
 
 
+def sort_tasks_by_category_and_date():
+    task_list = []
+    for key, value in tasks.items():
+        task_list.append(value)
+    task_list.sort(key=lambda x: (x.category, x.due_date))
+    return task_list
+
+def sort_tasks_by_date():
+    task_list = []
+    for key, value in tasks.items():
+        task_list.append(value)
+    task_list.sort(key=lambda x: x.due_date)
+    return task_list
+
 @click.group()
 def cli():
     read_in_tasks()
@@ -55,14 +69,11 @@ def list():
         click.echo('Nothing to do!')
         click.echo('\n')
     else:
-        task_list = []
-        for key, value in tasks.items():
-            task_list.append(value)
-        task_list.sort(key=lambda x: (x.category, x.due_date))
-        current_category = task_list[0].get_category()
+        sorted_tasks = sort_tasks_by_category_and_date()
+        current_category = sorted_tasks[0].get_category()
         click.echo('\n')
         click.echo(f'---- {current_category} ----'.upper())
-        for t in task_list:
+        for t in sorted_tasks:
             if t.get_category() == current_category:
                 click.echo(t.to_string())
             else:
@@ -71,6 +82,14 @@ def list():
                 click.echo(f'---- {current_category} ----'.upper())
                 click.echo(t.to_string())
         click.echo('\n')
+
+@cli.command()
+def lag():
+    click.echo('\n')
+    click.echo('---- ALL TASKS ----')
+    for t in sort_tasks_by_date():
+        click.echo(t.to_string())
+    click.echo('\n')
 
 
 @cli.command()
