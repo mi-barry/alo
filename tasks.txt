@@ -1,0 +1,8 @@
+EV,update tracking since label,2021-09-21,JUNI
+oi,require stats before recording calories,2021-09-20,JUNI
+zo,line number gutter,2021-10-01,SIMTEXT
+uA,set filename upon creation,2021-10-20,SIMTEXT
+Bh,escape input,2021-09-25,ALO
+VI,enable multi-factor auth amazon,2021-09-15,RANDOM
+jr,color output based on due date,2021-09-13,ALO
+jW,view as one list,2021-09-30,ALO

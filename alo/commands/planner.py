@@ -74,7 +74,7 @@ def list():
 
 
 @cli.command()
-def remove():
+def delete():
     id = click.prompt('Id of task to remove', type=str)
     if id in tasks:
         tasks.pop(id)
@@ -84,7 +84,7 @@ def remove():
 
 
 @cli.command()
-def add():
+def new():
     id = generate_unique_id()
     name = click.prompt('Name', type=str)
     category = click.prompt('Category', type=str)
