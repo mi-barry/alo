@@ -3,6 +3,7 @@ import os
 import string
 from task import Task
 import click
+from datetime import datetime
 
 
 tasks = {}
@@ -25,8 +26,7 @@ def read_in_tasks():
     for line in lines:
         if line != '\n':
             parts = line.split(',')
-            task = Task(parts[0], parts[1], parts[2], parts[3].replace('\n', ''))
-            print(task.get_category())
+            task = Task(parts[0], parts[1], string_to_date(parts[2]), parts[3].replace('\n', ''))
             tasks.update({task.get_id(): task})
     task_file.close()
 
@@ -37,6 +37,10 @@ def save_to_file():
     for key, value in tasks.items():
         task_file.write(f'{value.get_id()},{value.get_name()},{value.get_due_date()},{value.get_category().upper()}\n')
     task_file.close()
+
+
+def string_to_date(date_string):
+    return datetime.strptime(date_string, '%Y-%m-%d').date()
 
 
 @click.group()
@@ -54,7 +58,7 @@ def list():
         task_list = []
         for key, value in tasks.items():
             task_list.append(value)
-        task_list.sort(key=lambda r: r.category)
+        task_list.sort(key=lambda x: (x.category, x.due_date))
         current_category = task_list[0].get_category()
         click.echo('\n')
         click.echo(f'---- {current_category} ----'.upper())
@@ -84,10 +88,11 @@ def add():
     id = generate_unique_id()
     name = click.prompt('Name', type=str)
     category = click.prompt('Category', type=str)
-    due_date = click.prompt('Due date', type=str)
-    task = Task(id, name, due_date, category)
+    due_date = click.prompt('Due date (yyyy-mm-dd)', type=str)
+    task = Task(id, name, string_to_date(due_date), category)
     tasks.update({id: task})
     save_to_file()
+
 
 @cli.command()
 def update():
@@ -98,9 +103,6 @@ def update():
         task = tasks.get(id)
         new_name = click.prompt('Name', type=str)
         new_category = click.prompt('Category', type=str)
-        new_due_date = click.prompt('Due date', type=str)
+        new_due_date = click.prompt('Due date (yyyy/mm/dd)', type=str)
         task.update_task(new_name, new_due_date, new_category)
         save_to_file()
-
-
-
