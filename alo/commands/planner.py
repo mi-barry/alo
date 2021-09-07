@@ -26,6 +26,7 @@ def read_in_tasks():
         if line != '\n':
             parts = line.split(',')
             task = Task(parts[0], parts[1], parts[2], parts[3].replace('\n', ''))
+            print(task.get_category())
             tasks.update({task.get_id(): task})
     task_file.close()
 
@@ -34,7 +35,7 @@ def save_to_file():
     task_file = open(text_fullpath, 'w')
     task_file.truncate(0)
     for key, value in tasks.items():
-        task_file.write(f'{value.get_id()},{value.get_name()},{value.get_due_date()},{value.get_category()}\n')
+        task_file.write(f'{value.get_id()},{value.get_name()},{value.get_due_date()},{value.get_category().upper()}\n')
     task_file.close()
 
 
