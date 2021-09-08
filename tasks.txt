@@ -1,8 +1,9 @@
-EV,update tracking since label,2021-09-21,JUNI
+ev,update tracking since label,2021-09-21,JUNI
 oi,require stats before recording calories,2021-09-20,JUNI
 zo,line number gutter,2021-10-01,SIMTEXT
-uA,set filename upon creation,2021-10-20,SIMTEXT
-Bh,escape input,2021-09-25,ALO
-VI,enable multi-factor auth amazon,2021-09-15,RANDOM
+ua,set filename upon creation,2021-10-20,SIMTEXT
+bh,escape input,2021-09-25,ALO
+vi,enable amazon multi-factor auth,2021-09-15,REMINDERS
 jr,color output based on due date,2021-09-13,ALO
-jW,view as one list,2021-09-30,ALO
+ov,add days till due,2021-09-17,ALO
+rn,adjusted tdee,2021-11-15,JUNI
