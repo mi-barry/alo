@@ -156,7 +156,7 @@ def new(ctx):
 @click.pass_context
 def update(ctx):
     tasks = ctx.obj.get_tasks()
-    id = click.prompt('Id of task to update (Q to exit)', type=str)
+    id = click.prompt('Id of task to update', type=str)
     for target_task in tasks:
         if target_task.get_id() == id:
             new_name = click.prompt('Name', type=str)
