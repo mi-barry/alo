@@ -39,6 +39,12 @@ def calculate_days_to_due(date):
     days = abs(datetime.today().date() - date)
     return f'{days.days} days'
 
+def is_valid_date(date):
+    try:
+        valid_date = datetime.strptime(date, '%Y-%m-%d')
+    except ValueError:
+        return False
+
 
 class Tasks:
 
@@ -113,7 +119,9 @@ def lag(ctx):
 @cli.command(help='Remove a task.')
 @click.pass_context
 def delete(ctx):
-    id = click.prompt('Id of task to remove', type=str)
+    id = click.prompt('Id of task to delete (Q to exit)', type=str)
+    if id == 'Q':
+        return
     tasks = ctx.obj.get_tasks()
     for target_task in tasks:
         if target_task.get_id() == id:
@@ -136,6 +144,9 @@ def new(ctx):
     name = click.prompt('Name', type=str)
     category = click.prompt('Category', type=str)
     due_date = click.prompt('Due date (yyyy-mm-dd)', type=str)
+    if is_valid_date(due_date) == False:
+        click.echo('Invalid date. Check format matches: yyyy-mm-dd or yyyy-m-d.')
+        return
     task = Task(id, name, string_to_date(due_date), category)
     tasks.append(task)
     save_to_file(tasks)
@@ -145,7 +156,7 @@ def new(ctx):
 @click.pass_context
 def update(ctx):
     tasks = ctx.obj.get_tasks()
-    id = click.prompt('Id of task to update', type=str)
+    id = click.prompt('Id of task to update (Q to exit)', type=str)
     for target_task in tasks:
         if target_task.get_id() == id:
             new_name = click.prompt('Name', type=str)
@@ -153,5 +164,6 @@ def update(ctx):
             new_due_date = click.prompt('Due date (yyyy-mm-dd)', type=str)
             target_task.update_task(new_name, new_due_date, new_category)
             save_to_file(tasks)
+            click.echo('Task updated.')
             return
     click.echo(f'No task with id: {id}')
