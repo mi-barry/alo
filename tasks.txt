@@ -4,6 +4,5 @@ zo,line number gutter,2021-10-01,SIMTEXT
 ua,set filename upon creation,2021-10-20,SIMTEXT
 bh,escape input,2021-09-25,ALO
 vi,enable amazon multi-factor auth,2021-09-15,REMINDERS
-jr,color output based on due date,2021-09-13,ALO
 ov,add days till due,2021-09-17,ALO
 rn,adjusted tdee,2021-11-15,JUNI

@@ -1,10 +1,10 @@
 import os
 import string
-
-from task import Task
 import click
+from task import Task
 from datetime import datetime
 from itertools import permutations
+
 
 this_dir = os.path.abspath(os.path.dirname(__file__))
 text_fullpath = os.path.join(this_dir, "../../tasks.txt")
@@ -36,7 +36,8 @@ def save_to_file(tasks):
 
 
 def calculate_days_to_due(date):
-    pass
+    days = abs(datetime.today().date() - date)
+    return f'{days.days} days'
 
 
 class Tasks:
@@ -67,6 +68,11 @@ class Tasks:
                 return id
         raise ValueError(f"All {len(l)} unique ids have been used!")
 
+    def is_empty(self):
+        if not self.tasks:
+            return True
+        return False
+
 
 @click.group()
 @click.pass_context
@@ -74,26 +80,22 @@ def cli(ctx):
     ctx.obj = Tasks()
 
 
-@cli.command(help='List tasks grouped by their category.')
+@cli.command(help='List tasks grouped by category.')
 @click.pass_context
 def list(ctx):
-    if not ctx:
-        click.echo('\n')
-        click.echo('Nothing to do!')
-        click.echo('\n')
+    if ctx.obj.is_empty():
+        click.echo('\nNothing to do!\n')
     else:
         sorted_tasks = ctx.obj.sort_by_category_then_date()
         current_category = sorted_tasks[0].get_category()
-        click.echo('\n')
-        click.echo(f'---- {current_category} ----'.upper())
+        click.echo(f'\n---- {current_category} ----'.upper())
         for t in sorted_tasks:
             if t.get_category() == current_category:
-                click.echo(f'{t.to_string()}')
+                click.echo(f'{t.to_string()} ({calculate_days_to_due(t.get_due_date())})')
             else:
-                click.echo('\n')
                 current_category = t.get_category()
-                click.echo(f'---- {current_category} ----'.upper())
-                click.echo(f'{t.to_string()}')
+                click.echo(f'\n---- {current_category} ----'.upper())
+                click.echo(f'{t.to_string()} ({calculate_days_to_due(t.get_due_date())})')
         click.echo('\n')
 
 
@@ -104,7 +106,7 @@ def lag(ctx):
     click.echo('---- ALL TASKS ----')
     sorted_tasks = ctx.obj.sort_by_date()
     for t in sorted_tasks:
-        click.echo(f'{t.to_string()} - {t.get_category()}')
+        click.echo(f'{t.to_string_with_category()} ({calculate_days_to_due(t.get_due_date())})')
     click.echo('\n')
 
 
@@ -115,9 +117,14 @@ def delete(ctx):
     tasks = ctx.obj.get_tasks()
     for target_task in tasks:
         if target_task.get_id() == id:
-            tasks.remove(target_task)
-            save_to_file(tasks)
-            return
+            if click.confirm(f'Delete task: {target_task.to_string_with_category()}?'):
+                tasks.remove(target_task)
+                save_to_file(tasks)
+                click.echo('Task deleted.')
+                return
+            else:
+                click.echo('Delete canceled.')
+                return
     click.echo(f'No task with id: {id}')
 
 

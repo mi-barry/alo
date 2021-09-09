@@ -23,6 +23,9 @@ class Task:
     def to_string(self):
         return f'{self.id} - {self.name} - {self.date_to_string()}'
 
+    def to_string_with_category(self):
+        return f'{self.id} - {self.name} - {self.category} - {self.date_to_string()}'
+
     def update_task(self, new_name, new_due_date, new_category):
         self.name = new_name
         self.due_date = new_due_date
