@@ -51,10 +51,9 @@ def echo_with_color(task_info, days):
     if days == 0:
         click.echo(f'{task_info}' + click.style(' (due today)', fg='yellow'))
     elif days < 0:
-        click.echo(f'{task_info}' + click.style(f' (overdue by {abs(days)})', fg='red'))
+        click.echo(f'{task_info}' + click.style(f' (overdue by {abs(days)} days)', fg='red'))
     else:
         click.echo(f'{task_info}' + click.style(f' ({days} days)', fg='green'))
-
 
 
 class Tasks:
