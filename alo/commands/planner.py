@@ -35,15 +35,26 @@ def save_to_file(tasks):
     task_file.close()
 
 
-def calculate_days_to_due(date):
-    days = abs(datetime.today().date() - date)
-    return f'{days.days} days'
+def days_till_due(date):
+    days = date - datetime.today().date()
+    return days.days
+
 
 def is_valid_date(date):
     try:
         valid_date = datetime.strptime(date, '%Y-%m-%d')
     except ValueError:
         return False
+
+
+def echo_with_color(task_info, days):
+    if days == 0:
+        click.echo(f'{task_info}' + click.style(' (due today)', fg='yellow'))
+    elif days < 0:
+        click.echo(f'{task_info}' + click.style(f' (overdue by {abs(days)})', fg='red'))
+    else:
+        click.echo(f'{task_info}' + click.style(f' ({days} days)', fg='green'))
+
 
 
 class Tasks:
@@ -96,12 +107,13 @@ def list(ctx):
         current_category = sorted_tasks[0].get_category()
         click.echo(f'\n---- {current_category} ----'.upper())
         for t in sorted_tasks:
+            days = days_till_due(t.get_due_date())
             if t.get_category() == current_category:
-                click.echo(f'{t.to_string()} ({calculate_days_to_due(t.get_due_date())})')
+                echo_with_color(t.to_string(), days)
             else:
                 current_category = t.get_category()
                 click.echo(f'\n---- {current_category} ----'.upper())
-                click.echo(f'{t.to_string()} ({calculate_days_to_due(t.get_due_date())})')
+                echo_with_color(t.to_string(), days)
         click.echo('\n')
 
 
@@ -112,7 +124,8 @@ def lag(ctx):
     click.echo('---- ALL TASKS ----')
     sorted_tasks = ctx.obj.sort_by_date()
     for t in sorted_tasks:
-        click.echo(f'{t.to_string_with_category()} ({calculate_days_to_due(t.get_due_date())})')
+        days = days_till_due(t.get_due_date())
+        echo_with_color(t.to_string_with_category(), days)
     click.echo('\n')
 
 
@@ -145,11 +158,13 @@ def new(ctx):
     category = click.prompt('Category', type=str)
     due_date = click.prompt('Due date (yyyy-mm-dd)', type=str)
     if is_valid_date(due_date) == False:
+        click.echo('Task creation aborted.')
         click.echo('Invalid date. Check format matches: yyyy-mm-dd or yyyy-m-d.')
         return
     task = Task(id, name, string_to_date(due_date), category)
     tasks.append(task)
     save_to_file(tasks)
+    click.echo('Task created.')
 
 
 @cli.command(help='Edit a task.')
@@ -162,6 +177,10 @@ def update(ctx):
             new_name = click.prompt('Name', type=str)
             new_category = click.prompt('Category', type=str)
             new_due_date = click.prompt('Due date (yyyy-mm-dd)', type=str)
+            if is_valid_date(new_due_date) == False:
+                click.echo('Update aborted.')
+                click.echo('Invalid date. Check format matches: yyyy-mm-dd or yyyy-m-d.')
+                return
             target_task.update_task(new_name, new_due_date, new_category)
             save_to_file(tasks)
             click.echo('Task updated.')
