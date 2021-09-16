@@ -1,7 +1,1 @@
-ev,update tracking since label,2021-09-15,JUNI
-oi,require stats before recording calories,2021-09-15,JUNI
-zo,line number gutter,2021-10-01,SIMTEXT
-ua,set filename upon creation,2021-10-20,SIMTEXT
-rn,add adjusted tdee,2021-11-12,JUNI
-ac,add colored text to denote overdue and due today tasks,2021-09-12,ALO
-ab,calorie (weight?) graph,2021-09-15,JUNI
+
