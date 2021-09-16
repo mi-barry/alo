@@ -33,7 +33,7 @@ def save_to_file(tasks):
     for t in tasks:
         task_file.write(f'{t.get_id()},{t.get_name()},{t.get_due_date()},{t.get_category().upper()}\n')
     task_file.close()
-
+ f
 
 def days_till_due(date):
     days = date - datetime.today().date()
@@ -60,9 +60,6 @@ class Tasks:
 
     def __init__(self):
         self.tasks = read_in_tasks()
-
-    def append_task(self, task):
-        self.tasks.append_task(task)
 
     def sort_by_date(self):
         self.tasks.sort(key=lambda x: x.due_date)
