@@ -116,8 +116,7 @@ def list(ctx):
 @cli.command(help='List tasks as one group.')
 @click.pass_context
 def lag(ctx):
-    click.echo('\n')
-    click.echo('---- ALL TASKS ----')
+    click.echo('\n---- ALL TASKS ----')
     sorted_tasks = ctx.obj.sort_by_date()
     for t in sorted_tasks:
         days = days_till_due(t.get_due_date())
